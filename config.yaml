@@ -1,0 +1,6 @@
+robot:
+  gap: 100.0
+  gap_ignore: 50.0
+exchange:
+  client_id: ...
+  client_secret: ...
