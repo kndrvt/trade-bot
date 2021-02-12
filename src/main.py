@@ -3,11 +3,20 @@
 
 import sys
 import docker
+import threading
 
 
 def run_bot(config_file):
     client = docker.from_env()
-    client.containers.run(image='traderbot', command="python src/TraderBot.py " + config_file)
+    global container
+    try:
+        container = client.containers.run(name='traderbot', image='traderbot',
+                                command="python src/TraderBot.py " + config_file)
+    except:
+        pass
+    finally:
+        container.stop()
+        container.remove()
 
 
 def run_stock_exchange(config_file):
