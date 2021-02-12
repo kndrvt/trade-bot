@@ -1,5 +1,8 @@
 """
 """
+
+import sys
+import yaml
 import random
 
 class TraderBot:
@@ -70,3 +73,23 @@ class TraderBot:
 
     def set_order(self, state, price):
         print("Order:", state, price)
+
+    def terminate(self):
+        pass
+
+
+def main(argv):
+    config_file = argv[1]
+    with open(config_file) as file:
+        configs = yaml.load(file, Loader=yaml.FullLoader)
+        bot = TraderBot()
+        try:
+            bot.run(configs['robot'])
+        except:
+            bot.terminate()
+
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        main(sys.argv)
+    else:
+        print("Usage: python TraderBot.py <filename path>")
