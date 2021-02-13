@@ -11,21 +11,33 @@ def SigHandler(signum, frame):
 
 
 def main(argv):
+    # signal and arquments configuiring
+    print("Starting")
     signal.signal(signal.SIGINT, SigHandler)
     config_file = argv[1]
     global client, bot, exchange
+
     try:
+        # docker enviroment getting
         client = docker.from_env()
+
+        # bot starting
         bot = client.containers.run(name='traderbot', image='traderbot:latest',
                                     command="python src/TraderBot.py " + config_file,
                                     detach=True, auto_remove=True)
+        # stock exchange starting
         client.swarm.init(advertise_addr='127.0.0.1:8080')
-        exchange = client.services.create(name='exchange', image='mysql:latest')
+        exchange = client.services.create(name='exchange', image='mysql:8')
 
+        # signal waiting
         signal.pause()
+
     except:
         pass
+
     finally:
+        # docker stopping and service removing
+        print("Shutting down")
         bot.stop()
         exchange.remove()
         client.swarm.leave(force=True)
