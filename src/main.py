@@ -2,31 +2,33 @@
 """
 
 import sys
+import signal
 import docker
-import threading
 
 
-def run_bot(config_file):
-    client = docker.from_env()
-    global container
-    try:
-        container = client.containers.run(name='traderbot', image='traderbot',
-                                command="python src/TraderBot.py " + config_file)
-    except:
-        pass
-    finally:
-        container.stop()
-        container.remove()
-
-
-def run_stock_exchange(config_file):
-    pass
+def SigHandler(signum, frame):
+    return
 
 
 def main(argv):
+    signal.signal(signal.SIGINT, SigHandler)
     config_file = argv[1]
-    run_bot(config_file)
-    run_stock_exchange(config_file)
+    global client, bot, exchange
+    try:
+        client = docker.from_env()
+        bot = client.containers.run(name='traderbot', image='traderbot:latest',
+                                    command="python src/TraderBot.py " + config_file,
+                                    detach=True, auto_remove=True)
+        client.swarm.init(advertise_addr='127.0.0.1:8080')
+        exchange = client.services.create(name='exchange', image='mysql:latest')
+
+        signal.pause()
+    except:
+        pass
+    finally:
+        bot.stop()
+        exchange.remove()
+        client.swarm.leave(force=True)
 
 
 if __name__ == '__main__':
