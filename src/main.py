@@ -11,15 +11,13 @@ def SigHandler(signum, frame):
 
 
 def main(argv):
-
-    # signal and arquments configuiring
+    # signal and arguments configuring
     print("Starting")
     signal.signal(signal.SIGINT, SigHandler)
     config_file = argv[1]
     global client, bot, exchange
 
     try:
-
         # docker enviroment getting
         client = docker.from_env()
 
@@ -36,11 +34,9 @@ def main(argv):
         signal.pause()
 
     except:
-
         pass
 
     finally:
-
         # docker stopping and service removing
         print("Shutting down")
         bot.stop()

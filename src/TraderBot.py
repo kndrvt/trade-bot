@@ -1,11 +1,12 @@
 """
 """
 
-import sys
-import yaml
-import time
 import random
-import matplotlib.pyplot as plt
+import sys
+import time
+
+import yaml
+# import matplotlib.pyplot as plt
 
 
 class TraderBot:
@@ -14,11 +15,12 @@ class TraderBot:
         # exchange model
         random.seed()
         self.current_value = 100
-        # data for plot
-        self.plot_order_buy = {}
-        self.plot_order_sell = {}
-        self.plot_price = {}
-        self.current_time = int(0)
+
+        # # data for plot
+        # self.plot_order_buy = {}
+        # self.plot_order_sell = {}
+        # self.plot_price = {}
+        # self.current_time = int(0)
 
     def run(self, args):
         # set arguments
@@ -38,13 +40,15 @@ class TraderBot:
         # set order
         self.set_order(state, buy_price)
 
-        # information for plot collecting
-        self.plot_price[self.current_time] = current_price
-        self.plot_order_buy[self.current_time] = buy_price
+        # # information for plot collecting
+        # self.plot_price[self.current_time] = current_price
+        # self.plot_order_buy[self.current_time] = buy_price
 
         while (True):
             # get current_price
             current_price = self.request_current_price()
+            print(current_price)
+
             if state == 'buy':
                 # buy order
                 if current_price <= buy_price:
@@ -71,18 +75,21 @@ class TraderBot:
                 # error
                 print("Error of state. Default state is buy.")
                 state = 'buy'
-            # information for plot collecting
-            self.plot_price[self.current_time] = current_price
-            if state == 'buy':
-                self.plot_order_buy[self.current_time] = buy_price
-            else:
-                self.plot_order_sell[self.current_time] = sell_price
+
+            # # information for plot collecting
+            # self.plot_price[self.current_time] = current_price
+            # if state == 'buy':
+            #     self.plot_order_buy[self.current_time] = buy_price
+            # else:
+            #     self.plot_order_sell[self.current_time] = sell_price
+            # self.current_time += 1
+
             # pause
-            time.sleep(0.1)
-            self.current_time += 1
+            time.sleep(1)
 
     def request_current_price(self):
-        return self.current_value + random.normalvariate(0, 5)
+        self.current_value += random.normalvariate(0, 2)
+        return self.current_value
 
     def cancel_order(self, state, price):
         pass
@@ -91,16 +98,17 @@ class TraderBot:
         pass
 
     def terminate(self):
-        # plot creating and saving
-        plt.plot(self.plot_price.keys(), self.plot_price.values(), '-b', label='Price', linewidth=0.8)
-        plt.plot(self.plot_order_buy.keys(), self.plot_order_buy.values(), '.g', label='Buy', markersize=5)
-        plt.plot(self.plot_order_sell.keys(), self.plot_order_sell.values(), '.r', label='Sell', markersize=5)
-        plt.legend()
-        plt.grid()
-        plt.xlabel('Time')
-        plt.ylabel('Value')
-        plt.savefig('result.pdf')
-        plt.close()
+        pass
+        # # plot creating and saving
+        # plt.plot(self.plot_price.keys(), self.plot_price.values(), '-b', label='Price', linewidth=0.8)
+        # plt.plot(self.plot_order_buy.keys(), self.plot_order_buy.values(), '.g', label='Buy', markersize=5)
+        # plt.plot(self.plot_order_sell.keys(), self.plot_order_sell.values(), '.r', label='Sell', markersize=5)
+        # plt.legend()
+        # plt.grid()
+        # plt.xlabel('Time')
+        # plt.ylabel('Value')
+        # plt.savefig('result.pdf')
+        # plt.close()
 
 
 def main(argv):
