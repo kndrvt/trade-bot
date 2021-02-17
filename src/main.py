@@ -24,24 +24,25 @@ def main(argv):
         # bot starting
         bot = client.containers.run(name='traderbot', image='traderbot:latest',
                                     command="python src/TraderBot.py {}".format(config_file),
-                                    detach=True, auto_remove=True)
+                                    detach=True, auto_remove=True, network_mode='host')
 
-        # stock exchange starting
-        client.swarm.init(advertise_addr='127.0.0.1:8080')
-        exchange = client.services.create(name='exchange', image='mysql:8')
+        # # stock exchange starting
+        # exchange = client.containers.run(name='exchange', image='mysql/mysql-server:8.0',
+        #                                  command="mysql -h 127.0.0.1 -u root", detach=True,
+        #                                  auto_remove=True, network_mode='host',
+        #                                  hostname='127.0.0.1', publish_all_ports=True)
 
         # signal waiting
         signal.pause()
 
-    except:
-        pass
+    except Exception as err:
+        print(err)
 
     finally:
         # docker stopping and service removing
         print("Shutting down")
         bot.stop()
-        exchange.remove()
-        client.swarm.leave(force=True)
+        # exchange.stop()
 
 
 if __name__ == '__main__':
