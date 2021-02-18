@@ -1,20 +1,29 @@
 """
 """
 
-import random
+# import random
 import sys
 import time
-import pymysql
+
 import yaml
+from Exchange import Exchange
+
+
 # import matplotlib.pyplot as plt
 
 
 class TraderBot:
 
-    def __init__(self):
-        # exchange model
-        random.seed()
-        self.current_value = 100
+    def __init__(self, exchange, args):
+        self.exchange = exchange
+        self.gap = args['gap']
+        self.gap_ignore = args['gap_ignore']
+        self.amount = args['amount']
+        self.delay = args['delay']
+
+        # # exchange model
+        # random.seed()
+        # self.current_value = 100
 
         # # data for plot
         # self.plot_order_buy = {}
@@ -22,11 +31,7 @@ class TraderBot:
         # self.plot_price = {}
         # self.current_time = int(0)
 
-    def run(self, args):
-        # set arguments
-        gap = args['gap']
-        gap_ignore = args['gap_ignore']
-
+    def run(self):
         # set default state
         state = 'buy'
 
@@ -34,11 +39,11 @@ class TraderBot:
         current_price = self.request_current_price()
 
         # set prices
-        buy_price = current_price - gap / 2
-        sell_price = current_price + gap
+        buy_price = current_price - self.gap / 2
+        sell_price = current_price + self.gap
 
         # set order
-        self.set_order(state, buy_price)
+        self.set_order(state, buy_price, self.amount)
 
         # # information for plot collecting
         # self.plot_price[self.current_time] = current_price
@@ -53,24 +58,24 @@ class TraderBot:
                 # buy order
                 if current_price <= buy_price:
                     state = 'sell'
-                    sell_price = current_price + gap
-                    self.set_order(state, sell_price)
+                    sell_price = current_price + self.gap
+                    self.set_order(state, sell_price, self.amount)
 
-                elif current_price > buy_price + gap + gap_ignore:
+                elif current_price > buy_price + self.gap + self.gap_ignore:
                     self.cancel_order(state, buy_price)
-                    buy_price = current_price - gap / 2
-                    self.set_order(state, buy_price)
+                    buy_price = current_price - self.gap / 2
+                    self.set_order(state, buy_price, self.amount)
             elif state == 'sell':
                 # sell order
                 if current_price >= sell_price:
                     state = 'buy'
-                    buy_price = current_price - gap / 2
-                    self.set_order(state, buy_price)
+                    buy_price = current_price - self.gap / 2
+                    self.set_order(state, buy_price, self.amount)
 
-                elif current_price < sell_price - gap - gap_ignore:
+                elif current_price < sell_price - self.gap - self.gap_ignore:
                     self.cancel_order(state, sell_price)
-                    sell_price = current_price + gap
-                    self.set_order(state, sell_price)
+                    sell_price = current_price + self.gap
+                    self.set_order(state, sell_price, self.amount)
             else:
                 # error
                 print("Error of state. Default state is buy.")
@@ -85,20 +90,21 @@ class TraderBot:
             # self.current_time += 1
 
             # pause
-            time.sleep(1)
+            time.sleep(self.delay)
 
     def request_current_price(self):
-        self.current_value += random.normalvariate(0, 2)
-        return self.current_value
+        # self.current_value += random.normalvariate(0, 2)
+        # return self.current_value
+        return self.exchange.request_current_price()
 
     def cancel_order(self, state, price):
-        pass
+        return self.exchange.cancel_order()
 
-    def set_order(self, state, price):
-        pass
+    def set_order(self, state, price, amount):
+        return self.exchange.set_order(state, price, amount)
 
     def terminate(self):
-        pass
+        self.exchange.terminate()
         # # plot creating and saving
         # plt.plot(self.plot_price.keys(), self.plot_price.values(), '-b', label='Price', linewidth=0.8)
         # plt.plot(self.plot_order_buy.keys(), self.plot_order_buy.values(), '.g', label='Buy', markersize=5)
@@ -115,9 +121,10 @@ def main(argv):
     config_file = argv[1]
     with open(config_file) as file:
         configs = yaml.load(file, Loader=yaml.FullLoader)
-        bot = TraderBot()
+        exchange = Exchange(configs['exchange'])
+        bot = TraderBot(exchange, configs['robot'])
         try:
-            bot.run(configs['robot'])
+            bot.run()
         except:
             bot.terminate()
 

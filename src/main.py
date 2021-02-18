@@ -3,6 +3,8 @@
 
 import sys
 import signal
+from time import sleep
+
 import docker
 
 
@@ -41,8 +43,10 @@ def main(argv):
     finally:
         # docker stopping and service removing
         print("Shutting down")
+        bot.kill(signal='SIGINT')
         bot.stop()
         # exchange.stop()
+        print("Finished")
 
 
 if __name__ == '__main__':
