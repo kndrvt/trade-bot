@@ -1,6 +1,6 @@
 robot:
-  gap: 100.0
-  gap_ignore: 50.0
+  gap: 10.0
+  gap_ignore: 5.0
   amount: 10
   delay: 0.1 #s
 exchange:
