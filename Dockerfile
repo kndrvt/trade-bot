@@ -4,3 +4,4 @@ COPY . .
 
 RUN pip install pyyaml
 RUN pip install websockets
+RUN pip install matplotlib

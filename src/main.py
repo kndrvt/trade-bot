@@ -30,7 +30,7 @@ def main(argv):
         # bot starting
         bot = client.containers.run(name='tradebot', image='tradebot:latest',
                                     command="python src/TradeBot.py {}".format(config_file),
-                                    detach=True, auto_remove=True, network_mode='host')
+                                    detach=True, auto_remove=True)
 
         # # stock exchange starting
         # exchange = client.containers.run(name='exchange', image='mysql/mysql-server:8.0',

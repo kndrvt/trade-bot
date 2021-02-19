@@ -59,7 +59,6 @@ class TradeBot:
         while (True):
             # get current_price
             current_price = self.request_current_price()
-            print(current_price)
 
             # conditions checking
             if state == 'buy':
