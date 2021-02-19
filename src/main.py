@@ -1,4 +1,8 @@
 """
+This is main module. It launches docker containers with TraderBot.py
+and optionally with MySQL server.
+Module needs to receive YAML configuration file for TraderBot.py as argument.
+Module start to shut down after SIGINT receiving.
 """
 
 import sys
@@ -18,6 +22,7 @@ def main(argv):
     config_file = argv[1]
     global client, bot, exchange
 
+    # docker containers running
     try:
         # docker enviroment getting
         client = docker.from_env()
@@ -40,7 +45,7 @@ def main(argv):
         print(err)
 
     finally:
-        # docker stopping and service removing
+        # docker stopping and removing
         print("Shutting down")
         bot.kill(signal='SIGINT')
         bot.stop()
@@ -49,6 +54,7 @@ def main(argv):
 
 
 if __name__ == '__main__':
+    # arguments count handling
     if len(sys.argv) > 1:
         main(sys.argv)
     else:

@@ -1,18 +1,23 @@
 """
+This is class for connecting to stock exchange via API.
+It uses websockets and json.
+Main function of module launches methods testing.
 """
 
-import asyncio
+import sys
 from time import sleep
 
-import websockets
-import json
 import yaml
-import sys
+import json
+import asyncio
+import websockets
 
 
 class Exchange:
 
+    # constructor
     def __init__(self, args):
+        # set arguments from config file
         self.client_id = args['client_id']
         self.client_secret = args['client_secret']
         self._id = 0
@@ -20,6 +25,7 @@ class Exchange:
         self.instrument = args['instrument']
         self.order_id = None
 
+        # create message for authentication
         msg = \
             {
                 "jsonrpc": "2.0",
@@ -32,6 +38,7 @@ class Exchange:
                 }
             }
 
+        # authentication
         async def auth(msg):
             websocket = await websockets.client.connect(self.uri)
             await websocket.send(msg)
@@ -41,11 +48,14 @@ class Exchange:
 
         self.ws = asyncio.get_event_loop().run_until_complete(auth(json.dumps(msg)))
 
+    # generate id for jsonrpc
     def get_id(self):
         self._id += 1
         return self._id
 
+    # request and return current mark price
     def request_current_price(self):
+        # create message for price requesting
         msg = \
             {
                 "jsonrpc": "2.0",
@@ -56,6 +66,7 @@ class Exchange:
                 }
             }
 
+        # price requesting
         async def ticker(websocket, msg):
             await websocket.send(msg)
             response = await websocket.recv()
@@ -64,9 +75,13 @@ class Exchange:
 
         return asyncio.get_event_loop().run_until_complete(ticker(self.ws, json.dumps(msg)))
 
+    # cancel current order or some order from parameters
     def cancel_order(self, order=None):
+        # choose order id for canceling
         if not order:
             order = self.order_id
+
+        # create message for order canceling
         msg = \
             {
                 "jsonrpc": "2.0",
@@ -77,6 +92,7 @@ class Exchange:
                 }
             }
 
+        # order canceling
         async def cancel(websocket, msg):
             await websocket.send(msg)
             response = await websocket.recv()
@@ -85,7 +101,9 @@ class Exchange:
 
         asyncio.get_event_loop().run_until_complete(cancel(self.ws, json.dumps(msg)))
 
+    # cancel all orders
     def cancel_all(self):
+        # create message for all orders canceling
         msg = \
             {
                 "jsonrpc": "2.0",
@@ -94,6 +112,7 @@ class Exchange:
                 "params": {}
             }
 
+        # all orders canceling
         async def cancel_all(websocket, msg):
             await websocket.send(msg)
             response = await websocket.recv()
@@ -102,7 +121,9 @@ class Exchange:
 
         asyncio.get_event_loop().run_until_complete(cancel_all(self.ws, json.dumps(msg)))
 
-    def set_order(self, state, price, amount):
+    # place buy/sell order with corresponding price and amount
+    def place_order(self, state, price, amount):
+        # create message for order placement
         msg = \
             {
                 "jsonrpc": "2.0",
@@ -116,6 +137,7 @@ class Exchange:
                 }
             }
 
+        # order placement
         async def order(websocket, msg):
             await websocket.send(msg)
             response = await websocket.recv()
@@ -124,12 +146,15 @@ class Exchange:
 
         self.order_id = asyncio.get_event_loop().run_until_complete(order(self.ws, json.dumps(msg)))
 
+    # terminate object
     def terminate(self):
         async def close(websocket):
             await websocket.close()
             return
 
+        # all orders canceling
         self.cancel_all()
+        # connection closing
         asyncio.get_event_loop().run_until_complete(close(self.ws))
 
 
@@ -142,20 +167,20 @@ def main(argv):
         curr = exchange.request_current_price()
         print(curr)
         # test buy
-        exchange.set_order('buy', curr - 100, 10)
+        exchange.place_order('buy', curr - 100, 10)
         sleep(5)
         exchange.cancel_order()
         # test sell
-        exchange.set_order('sell', curr + 100, 10)
+        exchange.place_order('sell', curr + 100, 10)
         sleep(5)
         exchange.cancel_order()
         # test cancel
         exchange.cancel_order(order=5323874219)
         curr = exchange.request_current_price()
-        exchange.set_order('buy', curr - 100, 10)
-        exchange.set_order('buy', curr - 200, 10)
-        exchange.set_order('sell', curr + 100, 10)
-        exchange.set_order('sell', curr + 200, 10)
+        exchange.place_order('buy', curr - 100, 10)
+        exchange.place_order('buy', curr - 200, 10)
+        exchange.place_order('sell', curr + 100, 10)
+        exchange.place_order('sell', curr + 200, 10)
         sleep(5)
         exchange.cancel_all()
 
