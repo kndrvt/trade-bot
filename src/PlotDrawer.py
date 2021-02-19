@@ -1,6 +1,6 @@
 """
 This is class for collecting information and drawing plot
-after trader bot starts to shut down.
+after trade bot starts to shut down.
 """
 
 from time import time

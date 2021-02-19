@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "trader-bot"
+name = "trade-bot"
 version = "0.1.0"
-description = "This project is a simple trader bot with a simple strategy for Deribit.com exchange stock."
+description = "This project is a simple trade bot with a simple strategy for Deribit.com exchange stock."
 authors = ["kndrvt"]
 
 [tool.poetry.dependencies]
 python = "3.8.5"
-docker = "^4.4.1"
+docker = "^4.4.3"
 
 [tool.poetry.dev-dependencies]
 

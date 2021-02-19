@@ -1,7 +1,7 @@
 """
-This is main module. It launches docker containers with TraderBot.py
+This is main module. It launches docker containers with TradeBot.py
 and optionally with MySQL server.
-Module needs to receive YAML configuration file for TraderBot.py as argument.
+Module needs to receive YAML configuration file for TradeBot.py as argument.
 Module start to shut down after SIGINT receiving.
 """
 
@@ -28,8 +28,8 @@ def main(argv):
         client = docker.from_env()
 
         # bot starting
-        bot = client.containers.run(name='traderbot', image='traderbot:latest',
-                                    command="python src/TraderBot.py {}".format(config_file),
+        bot = client.containers.run(name='tradebot', image='tradebot:latest',
+                                    command="python src/TradeBot.py {}".format(config_file),
                                     detach=True, auto_remove=True, network_mode='host')
 
         # # stock exchange starting

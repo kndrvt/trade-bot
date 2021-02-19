@@ -1,6 +1,6 @@
 """
-This is module with bot. It launches trader bot.
-TraderBot class is main project class. It implements trader bot.
+This is module with bot. It launches trade bot.
+TradeBot class is main project class. It implements trade bot.
 Module needs to receive YAML configuration file as argument.
 Module start to shut down after SIGINT receiving.
 """
@@ -19,7 +19,7 @@ def SigHandler(signum, frame):
     raise Exception("Terminate exception")
 
 
-class TraderBot:
+class TradeBot:
 
     # constructor
     def __init__(self, exchange, drawer, args):
@@ -146,7 +146,7 @@ def main(argv):
         configs = yaml.load(file, Loader=yaml.FullLoader)
 
         # bot creating
-        bot = TraderBot(Exchange(configs['exchange']), PlotDrawer(), configs['robot'])
+        bot = TradeBot(Exchange(configs['exchange']), PlotDrawer(), configs['robot'])
 
         # bot running
         try:
@@ -162,4 +162,4 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         main(sys.argv)
     else:
-        print("Usage: python TraderBot.py <filename path>")
+        print("Usage: python TradeBot.py <filename path>")

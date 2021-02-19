@@ -4,7 +4,7 @@ robot:
   amount: 10
   delay: 0.1 #s
 exchange:
-  client_id: ...
-  client_secret: ...
+  client_id: HVyWOxj4
+  client_secret: 9lg-QCb19mXKOkQRrYYB3ig8AJdgOA8EOjeGhi6EiWI
   uri: wss://test.deribit.com/ws/api/v2
   instrument: BTC-PERPETUAL
