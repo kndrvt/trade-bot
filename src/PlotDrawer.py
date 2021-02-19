@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 
 class PlotDrawer:
 
-    # constructor
     def __init__(self):
         # initializing
         self._price = {}

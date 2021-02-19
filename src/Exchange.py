@@ -1,7 +1,7 @@
 """
 This is class for connecting to stock exchange via API.
 It uses websockets and json.
-Main function of module launches methods testing.
+The main function of the module starts testing methods.
 """
 
 import sys
@@ -15,7 +15,6 @@ import websockets
 
 class Exchange:
 
-    # constructor
     def __init__(self, args):
         # set arguments from config file
         self.client_id = args['client_id']
@@ -186,6 +185,7 @@ def main(argv):
 
 
 if __name__ == '__main__':
+    # arguments count handling
     if len(sys.argv) > 1:
         main(sys.argv)
     else:

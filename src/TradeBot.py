@@ -21,7 +21,6 @@ def SigHandler(signum, frame):
 
 class TradeBot:
 
-    # constructor
     def __init__(self, exchange, drawer, args):
         # set additional objects
         self.exchange = exchange
