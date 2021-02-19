@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "stock-exchange-bot"
+name = "trader-bot"
 version = "0.1.0"
 description = "Stock exchange bot which performs simple strategy"
 authors = ["kndrvt"]
