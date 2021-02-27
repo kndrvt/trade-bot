@@ -13,7 +13,7 @@ for Deribit.com exchange stock.
    Rewrite ```config.yaml``` according to your wishes. 
    Also, it is necessary to add your authentication data.
    
-2) You can launch ```run.sh``` for quick starting. 
+2) You can launch ```run.sh``` for quick start. 
    It contains commands for 3 and 4 steps.
    
 3) Create a trade bot docker image from Dockerfile using following commands:
@@ -28,5 +28,5 @@ docker build -t tradebot .
 4) Launch a docker container with your 
    trade bot using following command:
 ~~~bash
-docker run --name tradebot --rm tradebot poetry run python src/TradeBot.py config.yaml
+docker run --name tradebot --rm tradebot
 ~~~

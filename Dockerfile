@@ -4,3 +4,5 @@ COPY . .
 
 RUN pip install poetry
 RUN poetry update
+
+CMD ["poetry", "run", "python", "src/TradeBot.py", "config.yaml"]
