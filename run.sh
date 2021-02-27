@@ -1,3 +1,5 @@
+CONFIG="config.yaml"
+
 docker rmi tradebot
 docker build -t tradebot .
-poetry run python src/main.py config.yaml
+docker run -d --name tradebot --rm tradebot poetry run python src/TradeBot.py $CONFIG

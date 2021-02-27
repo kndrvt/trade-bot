@@ -2,6 +2,5 @@ FROM python:3.8
 
 COPY . .
 
-RUN pip install pyyaml
-RUN pip install websockets
-RUN pip install matplotlib
+RUN pip install poetry
+RUN poetry update

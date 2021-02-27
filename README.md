@@ -3,12 +3,20 @@ This project is a simple trade bot with a simple strategy
 for Deribit.com exchange stock.
 
 ### Requirements
+
 - Python 3.8
 - Docker SDK for Python 4.4
 
 ### Run
+
 1) Move to the project root directory. 
-   Create a trade bot docker image from Dockerfile using following commands:
+   Rewrite ```config.yaml``` according to your wishes. 
+   Also, it is necessary to add your authentication data.
+   
+2) You can launch ```run.sh``` for quick starting. 
+   It contains commands for 3 and 4 steps.
+   
+3) Create a trade bot docker image from Dockerfile using following commands:
 ~~~bash
 # if you have image named 'tradebot'
 docker rmi tradebot
@@ -17,15 +25,8 @@ docker rmi tradebot
 docker build -t tradebot .
 ~~~
 
-2) Rewrite ```config.yaml``` according to your wishes. 
-   Also, it is necessary to add your authentication data.
-
-3) ```main.py``` from ```src``` launches a docker container with your 
-   trade bot. Run ```main.py``` using following command:
+4) Launch a docker container with your 
+   trade bot using following command:
 ~~~bash
-poetry run python src/main.py config.yaml
+docker run --name tradebot --rm tradebot poetry run python src/TradeBot.py config.yaml
 ~~~
-
-4) Press **Ctrl+C** and wait for shutting down the running docker container.
-
-5) Also```run.sh``` contains commands for 1 and 3 steps .

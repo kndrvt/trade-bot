@@ -5,8 +5,10 @@ description = "This project is a simple trade bot with a simple strategy for Der
 authors = ["kndrvt"]
 
 [tool.poetry.dependencies]
-python = "3.8.5"
-docker = "^4.4.3"
+python = "3.8.7"
+PyYAML = "^5.4.1"
+websockets = "^8.1"
+matplotlib = "^3.3.4"
 
 [tool.poetry.dev-dependencies]
 
