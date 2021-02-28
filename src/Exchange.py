@@ -145,6 +145,29 @@ class Exchange:
 
         self.order_id = asyncio.get_event_loop().run_until_complete(order(self.ws, json.dumps(msg)))
 
+    # check order completion
+    def check_order(self):
+        # create message to check order completion
+        msg = \
+            {
+                "jsonrpc": "2.0",
+                "id": self.get_id(),
+                "method": "private/get_order_state",
+                "params": {
+                    "order_id": self.order_id
+                }
+            }
+
+        # order completion check
+        async def check(websocket, msg):
+            await websocket.send(msg)
+            response = await websocket.recv()
+            print(json.dumps(json.loads(response), indent=4))
+            # return True if order was closed and False another
+            return json.loads(response)['result']['order_state'] != 'open'
+
+        return asyncio.get_event_loop().run_until_complete(check(self.ws, json.dumps(msg)))
+
     # terminate object
     def terminate(self):
         async def close(websocket):
@@ -180,8 +203,10 @@ def main(argv):
         exchange.place_order('buy', curr - 200, 10)
         exchange.place_order('sell', curr + 100, 10)
         exchange.place_order('sell', curr + 200, 10)
+        print(exchange.check_order())
         sleep(5)
         exchange.cancel_all()
+        print(exchange.check_order())
 
 
 if __name__ == '__main__':
