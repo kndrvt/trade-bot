@@ -5,7 +5,6 @@ Module needs to receive YAML configuration file as argument.
 Module start to shut down after SIGINT receiving.
 """
 
-# import random
 import sys
 from time import sleep
 import signal
@@ -31,10 +30,6 @@ class TradeBot:
         self.gap_ignore = args['gap_ignore']
         self.amount = args['amount']
         self.delay = args['delay']
-
-        # # exchange model
-        # random.seed()
-        # self.current_value = 100
 
     # run bot forever
     def run(self):
@@ -114,9 +109,6 @@ class TradeBot:
 
     # request and return current mark price
     def request_current_price(self):
-        # # exchange model
-        # self.current_value += random.normalvariate(0, 2)
-        # return self.current_value
         return self.exchange.request_current_price()
 
     # cancel current order
