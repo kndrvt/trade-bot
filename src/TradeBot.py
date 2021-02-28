@@ -58,7 +58,7 @@ class TradeBot:
             # conditions checking
             if state == 'buy':
                 # buy order
-                if self.exchange.check_order():
+                if self.check_order():
                     # place new sell order after deal
                     state = 'sell'
                     sell_price = current_price + self.gap
@@ -78,7 +78,7 @@ class TradeBot:
 
             elif state == 'sell':
                 # sell order
-                if self.exchange.check_order():
+                if self.check_order():
                     # place new buy order after deal
                     state = 'buy'
                     buy_price = current_price - self.gap / 2
@@ -111,13 +111,17 @@ class TradeBot:
     def request_current_price(self):
         return self.exchange.request_current_price()
 
-    # cancel current order
-    def cancel_order(self):
-        return self.exchange.cancel_order()
-
     # place buy/sell order with corresponding price and amount
     def place_order(self, state, price, amount):
         return self.exchange.place_order(state, price, amount)
+
+    # open order check
+    def check_order(self):
+        return self.exchange.check_order()
+
+    # cancel current order
+    def cancel_order(self):
+        return self.exchange.cancel_order()
 
     # terminate object
     def terminate(self):

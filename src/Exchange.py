@@ -74,52 +74,6 @@ class Exchange:
 
         return asyncio.get_event_loop().run_until_complete(ticker(self.ws, json.dumps(msg)))
 
-    # cancel current order or some order from parameters
-    def cancel_order(self, order=None):
-        # choose order id for canceling
-        if not order:
-            order = self.order_id
-
-        # create message for order canceling
-        msg = \
-            {
-                "jsonrpc": "2.0",
-                "id": self.get_id(),
-                "method": "private/cancel",
-                "params": {
-                    "order_id": order
-                }
-            }
-
-        # order canceling
-        async def cancel(websocket, msg):
-            await websocket.send(msg)
-            response = await websocket.recv()
-            print(json.dumps(json.loads(response), indent=4))
-            return
-
-        asyncio.get_event_loop().run_until_complete(cancel(self.ws, json.dumps(msg)))
-
-    # cancel all orders
-    def cancel_all(self):
-        # create message for all orders canceling
-        msg = \
-            {
-                "jsonrpc": "2.0",
-                "id": self.get_id(),
-                "method": "private/cancel_all",
-                "params": {}
-            }
-
-        # all orders canceling
-        async def cancel_all(websocket, msg):
-            await websocket.send(msg)
-            response = await websocket.recv()
-            print(json.dumps(json.loads(response), indent=4))
-            return
-
-        asyncio.get_event_loop().run_until_complete(cancel_all(self.ws, json.dumps(msg)))
-
     # place buy/sell order with corresponding price and amount
     def place_order(self, state, price, amount):
         # create message for order placement
@@ -167,6 +121,52 @@ class Exchange:
             return json.loads(response)['result']['order_state'] != 'open'
 
         return asyncio.get_event_loop().run_until_complete(check(self.ws, json.dumps(msg)))
+
+    # cancel current order or some order from parameters
+    def cancel_order(self, order=None):
+        # choose order id for canceling
+        if not order:
+            order = self.order_id
+
+        # create message for order canceling
+        msg = \
+            {
+                "jsonrpc": "2.0",
+                "id": self.get_id(),
+                "method": "private/cancel",
+                "params": {
+                    "order_id": order
+                }
+            }
+
+        # order canceling
+        async def cancel(websocket, msg):
+            await websocket.send(msg)
+            response = await websocket.recv()
+            print(json.dumps(json.loads(response), indent=4))
+            return
+
+        asyncio.get_event_loop().run_until_complete(cancel(self.ws, json.dumps(msg)))
+
+    # cancel all orders
+    def cancel_all(self):
+        # create message for all orders canceling
+        msg = \
+            {
+                "jsonrpc": "2.0",
+                "id": self.get_id(),
+                "method": "private/cancel_all",
+                "params": {}
+            }
+
+        # all orders canceling
+        async def cancel_all(websocket, msg):
+            await websocket.send(msg)
+            response = await websocket.recv()
+            print(json.dumps(json.loads(response), indent=4))
+            return
+
+        asyncio.get_event_loop().run_until_complete(cancel_all(self.ws, json.dumps(msg)))
 
     # terminate object
     def terminate(self):
