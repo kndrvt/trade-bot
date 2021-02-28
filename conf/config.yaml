@@ -1,10 +1,10 @@
 robot:
-  gap: 10.0
-  gap_ignore: 5.0
-  amount: 10
-  delay: 0.1 #s
+  gap: 20.0
+  gap_ignore: 10.0
+  amount: 10 # integer
+  delay: 0.1 # s
 exchange:
   client_id: HVyWOxj4
-  client_secret: i3OZ_-cjSUOqpkA6ZkROPqNgJ9eRr128c_w1Aom6wec
+  client_secret:
   uri: wss://test.deribit.com/ws/api/v2
   instrument: BTC-PERPETUAL

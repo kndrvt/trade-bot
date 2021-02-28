@@ -63,7 +63,7 @@ class TradeBot:
             # conditions checking
             if state == 'buy':
                 # buy order
-                if current_price <= buy_price:
+                if self.exchange.check_order():
                     # place new sell order after deal
                     state = 'sell'
                     sell_price = current_price + self.gap
@@ -83,7 +83,7 @@ class TradeBot:
 
             elif state == 'sell':
                 # sell order
-                if current_price >= sell_price:
+                if self.exchange.check_order():
                     # place new buy order after deal
                     state = 'buy'
                     buy_price = current_price - self.gap / 2
