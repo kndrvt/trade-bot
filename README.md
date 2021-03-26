@@ -5,7 +5,7 @@ for Deribit.com exchange stock.
 ### Requirements
 
 - Python 3.8
-- Docker SDK for Python 4.4
+- Docker
 
 ### Run
 
